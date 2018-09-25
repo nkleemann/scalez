@@ -1,10 +1,12 @@
 -- Ideen:
 --      .midi Datei generieren
 --      Audio abspielen
+--      Draw mini ASCII Piano Scale Chart
 
 module SCALEZ where
 
 import qualified Data.Map as Map
+
 
 --
 --      DATA TYPES
@@ -22,40 +24,26 @@ data Note
     | GSharp
     | A
     | ASharp
-    | B deriving (Show) -- TODO own instance
+    | B deriving (Show, Enum) -- TODO own instance
 
 data Step
-    = Whole | Half deriving (Show)
+    = Whole 
+    | Half deriving (Show, Enum)
 
 type SemiTone  = Int
 type ScaleName = String
 
---
---      CONSTANTS
---
 
-notes :: Map.Map SemiTone Note
-notes 
-    = Map.fromList [
-                       (1, C),
-                       (2, CSharp),
-                       (3, D),
-                       (4, DSharp),
-                       (5, E),
-                       (6, F),
-                       (7, FSharp),
-                       (8, G),
-                       (9, GSharp),
-                       (10, A),
-                       (11, ASharp),
-                       (12, B)
-                   ]
+--
+--      LOCAL SCALEZ
+--
 
 scalez :: Map.Map ScaleName [Step]
 scalez 
     = Map.fromList [
                        ("Major", [Whole, Whole, Half, Whole, Whole, Whole, Half])
                    ]
+
 
 --
 --      FUNCTIONS - MUSIC
@@ -67,12 +55,16 @@ whole_step = (+ 2)
 half_step  :: SemiTone -> SemiTone
 half_step  = (+ 1)
 
+
 --
 --      FUNCTIONS - UTILS
 --
 
-lookup_note :: SemiTone -> Maybe Note
-lookup_note tone = Map.lookup tone notes
+to_tone :: Note -> SemiTone
+to_tone = fromEnum
+
+to_note :: SemiTone -> Note
+to_note = toEnum
 
 lookup_steps :: ScaleName -> Maybe [Step]
 lookup_steps name = Map.lookup name scalez
