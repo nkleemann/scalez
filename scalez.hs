@@ -3,6 +3,11 @@
 --      Audio abspielen
 --      Draw mini ASCII Piano Scale Chart
 
+--
+-- Für Oktavdarstellung -> [D,E,FSharp,G,A,B,CSharp,D] -> [(D,1),(E,1),(FSharp,1),(G,1),(A,1),(B,1),(CSharp,2),(D,2)]
+-- Oder: Funktion, die die Tastatur zeichnet und die Liste durchgeht sieht zwischen zwei Noten von selbst ob sie eine Oktave
+-- überspannen. So kann an dieser Stelle reagiert werden. Die Oktavsache kümmert ja eh nur die Zeichen - Funktion.
+
 module SCALEZ where
 
 import qualified Data.Map as Map
