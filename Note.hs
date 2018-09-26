@@ -20,7 +20,7 @@ data Note
     | ASharp
     | B deriving (Show, Enum, Eq)
 
-type SemiTone  = Int
+type SemiTone = Int
 
 
 -- | Perform a half step.
@@ -31,16 +31,15 @@ half_step = (+ 1)
 whole_step :: SemiTone -> SemiTone
 whole_step = (+ 2)
 
--- | Perform both half and whole step to form an augmented second.
+-- | Perform both half and whole step to form an 'augmented second'.
 aug_sec :: SemiTone -> SemiTone
 aug_sec = (+ 3)
 
--- | Keep a Tone in one and the same octave.
+-- | Keep a tone in the same octave.
 same_octave :: SemiTone -> SemiTone
 same_octave = flip mod 12
 
--- | Transpose a note by a given step while
--- | staying in the same octave.
+-- | Transpose a note by a given step.
 transpose :: Note -> Step -> Note
 transpose note step
     = case step of
@@ -48,21 +47,20 @@ transpose note step
             Whole  -> to_note . same_octave . whole_step $ to_tone note
             AugSec -> to_note . same_octave . aug_sec    $ to_tone note
 
--- |Generate a scale beginning at a root note.
+-- | Generate a concrete scale beginning at root note.
 gen_scale :: Note -> [Step] -> [Note] 
-gen_scale root steps
-    = scanl transpose root steps
+gen_scale = scanl transpose
 
 
 --
 --      UTILS
 --
 
--- |Used for transposition
+-- | Used for transposition
 to_tone :: Note -> SemiTone
 to_tone = fromEnum
 
--- |Transform SemiTone back into classical notation as 'Note'
+-- | Transform SemiTone back into classical notation as 'Note'
 to_note :: SemiTone -> Note
 to_note = toEnum
 
