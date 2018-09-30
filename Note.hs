@@ -1,7 +1,3 @@
--- Ideen:
---      Audio abspielen -> runCommand "play -n synth 0.2 sine 440 &> /dev/null" >> return ()
---      midi 
-
 module Note where
 
 import Scale
@@ -71,28 +67,3 @@ to_note = toEnum
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
---      TESTING
-
-major_from_d =  [D,E,FSharp,G,A,B,CSharp,D]
-works =         major_from_d == gen_scale D (snd major)

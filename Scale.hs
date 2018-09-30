@@ -5,7 +5,7 @@ data Step
   = Whole
   | Half
   | AugSec
-  deriving (Show)
+  deriving (Show, Eq)
 
 type ScaleName = String
 type Scale = (ScaleName, [Step])
@@ -90,6 +90,14 @@ locrian_mode
           [Half, Whole, Whole, Half, Whole, Whole, Whole]
       )
 
+-- | Based on the 'Mystic Chord'
+prometheus :: Scale
+prometheus
+    = (
+          "Prometheus",
+          [Whole, Whole, Whole, AugSec, Half, Whole]
+      )
+
 spanish_gypsy :: Scale
 spanish_gypsy
     = (
@@ -104,6 +112,31 @@ blues
           [AugSec, Whole, Half, Half, AugSec, Whole]
       )
 
+super_locrian :: Scale
+super_locrian
+    = (
+          "Super Locrian", 
+          [Half, Whole, Half, Whole, Whole, Whole, Whole]
+      )
+
+-- | Still in minor, despite it's name
+neopolitan_major :: Scale
+neopolitan_major
+    = (
+          "Neopolitan Major",
+          [Half, Whole, Whole, Whole, Whole, Whole, Half]  
+      )
+
+neopolitan_minor :: Scale
+neopolitan_minor
+    = (
+          "Neopolitan Minor",
+          [Half, Whole, Whole, Whole, Half, Whole, Whole]
+      )
+
+
+-- | originally published in a Milan journal as a musical challenge,
+-- | with an invitation to harmonize it in some way.
 enigmatic :: Scale
 enigmatic
     = (
