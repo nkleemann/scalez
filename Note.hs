@@ -2,6 +2,7 @@ module Note where
 
 import Scale
 
+
 data Note
     = C 
     | CSharp 
@@ -14,7 +15,8 @@ data Note
     | GSharp
     | A
     | ASharp
-    | B deriving (Show, Enum, Eq)
+    | B 
+    deriving (Show, Enum, Eq)
 
 type SemiTone = Int
 
@@ -59,11 +61,3 @@ to_tone = fromEnum
 -- | Transform SemiTone back into classical notation as 'Note'
 to_note :: SemiTone -> Note
 to_note = toEnum
-
-
-
-
-
-
-
-

@@ -11,10 +11,6 @@ type ScaleName = String
 type Scale = (ScaleName, [Step])
 
 
-  --
-  --      LOCAL SCALEZ
-  --
-
 major :: Scale
 major 
     = (
@@ -171,10 +167,3 @@ pentatonic_blues
           "Pentatonic Blues",
           [AugSec, Whole, Half, Half, AugSec]  
       )
-
-
-
-
-
-
-
