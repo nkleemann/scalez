@@ -18,13 +18,6 @@ type Pattern   = [Sound]
 a4_base_freq    = 440.0
 tvelvetone_base = 1.0594630943592953
 
-
--- | Play back a sound using sox.
-play_sound :: Sound -> IO ()
-play_sound s =
-    runCommand ("play -n -c1 synth 0.3 sine " ++ as_string s ++ " &> /dev/null") >>
-    return ()
-
 -- | Play back a musical pattern.
 sing :: Pattern -> IO ()
 sing pattern = do
@@ -35,9 +28,11 @@ sing pattern = do
                 else play_sound s >> threadDelay 300000)
     return ()
 
--- | Distance to reference note in number of half steps.
-half_steps :: Note -> Int
-half_steps note = to_tone note - to_tone A
+-- | Play back a sound using sox.
+play_sound :: Sound -> IO ()
+play_sound s =
+    runCommand ("play -n -c1 synth 0.3 sine " ++ as_string s ++ " &> /dev/null") >>
+    return ()
 
 -- | Convert a Note into an audible frequency.
 -- |    
@@ -49,6 +44,14 @@ half_steps note = to_tone note - to_tone A
 to_freq :: Note -> Frequency
 to_freq note = a4_base_freq * (tvelvetone_base ^^ (half_steps note))
 
+-- | Distance to reference note in number of half steps.
+half_steps :: Note -> Int
+half_steps note = to_tone note - to_tone A
+
+-- | Generate a sequence of Frequencies.
+freqs_from_root :: Frequency -> [Step] -> [Frequency]
+freqs_from_root root steps = scanl half_stepF root steps
+
 -- | Raise a frequency by one half step.
 half_stepF :: Frequency -> Step -> Frequency
 half_stepF freq step =
@@ -56,10 +59,6 @@ half_stepF freq step =
         Half   -> freq * tvelvetone_base
         Whole  -> freq * (tvelvetone_base ^ 2)
         AugSec -> freq * (tvelvetone_base ^ 3)
-
--- | Generate a sequence of Frequencies.
-freqs_from_root :: Frequency -> [Step] -> [Frequency]
-freqs_from_root root steps = scanl half_stepF root steps
 
 -- | Transform Frequency sequence into a musical Pattern which we can play back.
 to_pattern :: [Frequency] -> Pattern
