@@ -16,8 +16,8 @@ type Frequency = Float
 type Pattern   = [Sound]
 
 
--- Change to 432 as you wish :p
-a4_base_freq = 440
+-- Change to 432.0 as you wish :p
+a4_base_freq    = 440.0
 tvelvetone_base = 1.0594630943592953
 
 
