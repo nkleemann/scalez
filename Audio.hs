@@ -6,7 +6,6 @@ import System.Process
 import Note
 import Scale
 
-
 data Sound
     = S Frequency
     | Stop
@@ -15,11 +14,26 @@ data Sound
 type Frequency = Float
 type Pattern   = [Sound]
 
-
 -- Change to 432.0 as you wish :p
 a4_base_freq    = 440.0
 tvelvetone_base = 1.0594630943592953
 
+
+-- | Play back a sound using sox.
+play_sound :: Sound -> IO ()
+play_sound s =
+    runCommand ("play -n -c1 synth 0.3 sine " ++ as_string s ++ " &> /dev/null") >>
+    return ()
+
+-- | Play back a musical pattern.
+sing :: Pattern -> IO ()
+sing pattern = do
+    p <- forM pattern
+        (\s -> do
+            if s == Stop
+                then return ()
+                else play_sound s >> threadDelay 300000)
+    return ()
 
 -- | Distance to reference note in number of half steps.
 half_steps :: Note -> Int
@@ -60,27 +74,3 @@ as_string s =
     case s of
         Stop -> ""
         S f  -> show f
-
-
---
---      IO - ZONE
---
-
--- | Play back a sound.
-play_sound :: Sound -> IO ()
-play_sound s =
-    runCommand ("play -n -c1 synth 0.3 sine " ++ as_string s ++ " &> /dev/null") >>
-    return ()
-
--- | Play back a pattern.
-sing :: Pattern -> IO ()
-sing pattern = do
-    p <- forM pattern
-        (\s -> do
-            if s == Stop
-                then return ()
-                else play_sound s >> threadDelay 300000)
-    return ()
-    
--- for main function 
--- sing $ to_pattern (freqs_from_root (to_freq C) (snd major))
