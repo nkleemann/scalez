@@ -14,9 +14,35 @@ data Sound
 type Frequency = Float
 type Pattern   = [Sound]
 
--- Change to 432.0 as you wish :p
+-- Change to 432.0 if you wish :p
 a4_base_freq    = 440.0
 tvelvetone_base = 1.0594630943592953
+
+-- | Convert a Note into an audible frequency.
+-- |    
+-- |    f_n = f_0 * a^n
+-- |    f_n     Frequency of the note n half steps away
+-- |    f_0     frequency of the reference note
+-- |    a       (2) ** (1/12) (twelvetone_base)
+-- |    n       Number of halfsteps away from reference note
+to_freq :: Note -> Frequency
+to_freq note = a4_base_freq * (tvelvetone_base ^^ (half_steps note))
+
+-- | Distance to reference note in number of half steps.
+half_steps :: Note -> Int
+half_steps note = to_tone note - to_tone A
+
+-- | Raise a frequency by one half step.
+half_stepF :: Frequency -> Step -> Frequency
+half_stepF freq step =
+    case step of
+        Half   -> freq * tvelvetone_base
+        Whole  -> freq * (tvelvetone_base ^ 2)
+        AugSec -> freq * (tvelvetone_base ^ 3)
+
+-- | Generate a sequence of Frequencies.
+freqs_from_root :: Frequency -> [Step] -> [Frequency]
+freqs_from_root root steps = scanl half_stepF root steps
 
 -- | Play back a musical pattern.
 sing :: Pattern -> IO ()
@@ -33,32 +59,6 @@ play_sound :: Sound -> IO ()
 play_sound s =
     runCommand ("play -n -c1 synth 0.3 sine " ++ as_string s ++ " &> /dev/null") >>
     return ()
-
--- | Convert a Note into an audible frequency.
--- |    
--- |    f_n = f_0 * a^n
--- |    f_n     Frequency of the note n half steps away
--- |    f_0     frequency of the reference note
--- |    a       (2) ** (1/12) (twelvetone_base)
--- |    n       Number of halfsteps away from reference note
-to_freq :: Note -> Frequency
-to_freq note = a4_base_freq * (tvelvetone_base ^^ (half_steps note))
-
--- | Distance to reference note in number of half steps.
-half_steps :: Note -> Int
-half_steps note = to_tone note - to_tone A
-
--- | Generate a sequence of Frequencies.
-freqs_from_root :: Frequency -> [Step] -> [Frequency]
-freqs_from_root root steps = scanl half_stepF root steps
-
--- | Raise a frequency by one half step.
-half_stepF :: Frequency -> Step -> Frequency
-half_stepF freq step =
-    case step of
-        Half   -> freq * tvelvetone_base
-        Whole  -> freq * (tvelvetone_base ^ 2)
-        AugSec -> freq * (tvelvetone_base ^ 3)
 
 -- | Transform Frequency sequence into a musical Pattern which we can play back.
 to_pattern :: [Frequency] -> Pattern
