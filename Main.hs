@@ -3,14 +3,29 @@ module Main where
 import System.Environment
 import System.Exit
 import Note
-import Scale
-import Audio
+
 
 main :: IO ()
 main = do
     args <- getArgs
     mapM putStrLn args
+    usage
     return ()
+
+
+parse_args args =
+    case args of
+        []               -> usage    >> exit
+        ["-v"]           -> version  >> exit
+        [r, s]           -> gen_scale r s >> exit -- TODO validate that r is note and s is scale here
+        -- [r, s, "--sing"] -> sing_scale r s >> exit
+        _                -> exit_oh_no
+
+usage       = putStrLn "scalez v 1.0\nUsage: scalez <rootnote> <scale> [--sing]"
+version     = putStrLn "Haskell Scalez 1.0"
+exit        = exitWith ExitSuccess
+exit_oh_no  = exitWith $ ExitFailure 1
+
 
 
 
@@ -35,3 +50,5 @@ main = do
     exit    = exitWith ExitSuccess
     die     = exitWith (ExitFailure 1)
 -}
+
+-- sing $ to_pattern (freqs_from_root (to_freq C) (snd major))
