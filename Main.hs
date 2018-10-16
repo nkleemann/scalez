@@ -8,26 +8,26 @@ import Note
 main :: IO ()
 main = do
     args <- getArgs
-    mapM putStrLn args
-    usage
+    parse args
     return ()
 
 
-parse_args args =
+-- parse :: [String] -> IO a
+parse args =
     case args of
-        []               -> usage    >> exit
-        ["-v"]           -> version  >> exit
-        [r, s]           -> gen_scale r s >> exit -- TODO validate that r is note and s is scale here
+        []               -> usage     >> exit
+        ["-v"]           -> version   >> exit
+        [r]              -> complain  >> exit
+        [r, s]           -> putStrLn "Test" -- return $ gen_scale r s >> exit -- TODO validate that r is note and s is scale here
         -- [r, s, "--sing"] -> sing_scale r s >> exit
         _                -> exit_oh_no
 
+
 usage       = putStrLn "scalez v 1.0\nUsage: scalez <rootnote> <scale> [--sing]"
+complain    = putStrLn "Faulty arguments.\nExample Invocation: scalez F# blues --sing"
 version     = putStrLn "Haskell Scalez 1.0"
 exit        = exitWith ExitSuccess
 exit_oh_no  = exitWith $ ExitFailure 1
-
-
-
 
 
 {-  Example : https://wiki.haskell.org/Tutorials/Programming_Haskell/Argument_handling

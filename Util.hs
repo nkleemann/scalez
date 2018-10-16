@@ -3,6 +3,7 @@ module Util where
 import Text.Read
 import Note
 
+-- | Transform a string into a it's Note Representation.
 str_to_note :: String -> Maybe Note
 str_to_note s
     = case splitAt 1 s of
