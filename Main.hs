@@ -2,6 +2,7 @@ module Main where
 
 import System.Environment
 import System.Exit
+import DangerZone
 import Note
 
 
@@ -15,12 +16,12 @@ main = do
 -- parse :: [String] -> IO a
 parse args =
     case args of
-        []               -> usage     >> exit
-        ["-v"]           -> version   >> exit
-        [r]              -> complain  >> exit
-        [r, s]           -> putStrLn "Test" -- return $ gen_scale r s >> exit -- TODO validate that r is note and s is scale here
-        -- [r, s, "--sing"] -> sing_scale r s >> exit
-        _                -> exit_oh_no
+        [r, s]            -> putStrLn "Normal Mode" -- return $ gen_scale r s >> exit -- TODO validate that r is note and s is scale here
+        [r, s, "--sing"]  -> putStrLn "Sing a Song"
+        ["-v"]            -> version   >> exit
+        [_]               -> complain  >> exit
+        []                -> usage     >> exit
+        _                 -> exit_oh_no
 
 
 usage       = putStrLn "scalez v 1.0\nUsage: scalez <rootnote> <scale> [--sing]"

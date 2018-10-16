@@ -2,6 +2,7 @@ module Util where
 
 import Text.Read
 import Note
+import Scale
 
 -- | Transform a string into a it's Note Representation.
 str_to_note :: String -> Maybe Note
@@ -10,3 +11,14 @@ str_to_note s
         (note_str, "")  -> readMaybe   note_str :: Maybe Note
         (note_str, "#") -> readMaybe $ note_str ++ "Sharp" :: Maybe Note
         _               -> Nothing
+
+
+-- TODO IO [Note] or [Note] ?? 
+-- This function has to be 
+scale_helper :: Maybe Note -> Maybe Scale -> Maybe [Note]
+scale_helper n s
+    = case n of
+        Nothing -> Nothing
+        Just n' -> case s of
+                       Nothing -> Nothing
+                       Just s' -> Just $ gen_scale n' (snd s')
