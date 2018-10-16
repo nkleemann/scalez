@@ -1,20 +1,11 @@
 module Util where
 
+import Text.Read
 import Note
 
-str_to_note :: String -> Maybe Note 
+str_to_note :: String -> Maybe Note
 str_to_note s
-    = case s of
-        "C"  -> Just C
-        "C#" -> Just CSharp
-        "D"  -> Just D
-        "D#" -> Just DSharp
-        "E"  -> Just E
-        "F"  -> Just F
-        "F#" -> Just FSharp
-        "G"  -> Just G
-        "G#" -> Just GSharp
-        "A"  -> Just A
-        "A#" -> Just ASharp
-        "B"  -> Just B
-        _    -> Nothing
+    = case splitAt 1 s of
+        (note_str, "")  -> readMaybe   note_str :: Maybe Note
+        (note_str, "#") -> readMaybe $ note_str ++ "Sharp" :: Maybe Note
+        _               -> Nothing

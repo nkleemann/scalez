@@ -16,7 +16,7 @@ data Note
     | A
     | ASharp
     | B 
-    deriving (Show, Enum, Eq)
+    deriving (Show, Read, Enum, Eq)
 
 type SemiTone = Int
 
