@@ -2,7 +2,7 @@ module Main where
 
 import System.Environment
 import System.Exit
-import DangerZone
+import Util
 import Note
 
 
@@ -16,7 +16,7 @@ main = do
 -- parse :: [String] -> IO a
 parse args =
     case args of
-        [r, s]            -> putStrLn "Normal Mode" -- return $ gen_scale r s >> exit -- TODO validate that r is note and s is scale here
+        [r, s]            -> putStrLn "Normal Mode" -- return $ gen_scale r s >> exit 
         [r, s, "--sing"]  -> putStrLn "Sing a Song"
         ["-v"]            -> version   >> exit
         [_]               -> complain  >> exit

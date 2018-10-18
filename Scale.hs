@@ -10,39 +10,41 @@ data Step
 type ScaleName = String
 type Scale = (ScaleName, [Step])
 
+-- TODO Scale map to look up a scale
+
 
 major :: Scale
-major 
+major
     = (
-          "Major",
+          "major",
           [Whole, Whole, Half, Whole, Whole, Whole, Half]
       )
 
 minor :: Scale
 minor 
     = (
-          "Minor", 
+          "minor", 
           [Whole, Half, Whole, Whole, Half, Whole, Whole]
       )
 
 harmonic_minor :: Scale
 harmonic_minor 
     = (
-          "Harmonic Minor", 
+          "harmonic-minor", 
           [Whole, Half, Whole, Whole, Half, AugSec, Half]
       )
 
 melodic_minor :: Scale
 melodic_minor 
     = (
-          "Melodic Minor", 
+          "melodic-minor", 
           [Whole, Half, Whole, Whole, Whole, Whole, Half]
       )
 
 romanian_minor :: Scale
 romanian_minor 
     = (
-          "Romanian Minor", 
+          "romanian-minor", 
           [Whole, Half, AugSec, Half, Whole, Half, Whole]
       )
 
@@ -50,7 +52,7 @@ romanian_minor
 dorian_mode :: Scale
 dorian_mode 
     = (
-          "Dorian Mode", 
+          "dorian-mode", 
           [Whole, Half, Whole, Whole, Whole, Half, Whole]
       )
 
@@ -58,7 +60,7 @@ dorian_mode
 mixolydian_mode :: Scale
 mixolydian_mode 
     = (
-          "Mixolydian Mode", 
+          "mixolydian-mode", 
           [Whole, Whole, Half, Whole, Whole, Half, Whole]
       )
 
@@ -66,7 +68,7 @@ mixolydian_mode
 phrygian_mode :: Scale
 phrygian_mode 
     = (
-          "Phrygian Mode", 
+          "phrygian-mode", 
           [Half, Whole, Whole, Whole, Half, Whole, Whole]
       )
 
@@ -74,7 +76,7 @@ phrygian_mode
 lydian_mode :: Scale
 lydian_mode 
     = (
-          "Lydian Mode", 
+          "lydian-mode", 
           [Whole, Whole, Whole, Half, Whole, Whole, Half]
       )
 
@@ -82,7 +84,7 @@ lydian_mode
 locrian_mode :: Scale
 locrian_mode 
     = (
-          "Locrian Mode", 
+          "locrian-mode", 
           [Half, Whole, Whole, Half, Whole, Whole, Whole]
       )
 
@@ -90,28 +92,28 @@ locrian_mode
 prometheus :: Scale
 prometheus
     = (
-          "Prometheus",
+          "prometheus",
           [Whole, Whole, Whole, AugSec, Half, Whole]
       )
 
 spanish_gypsy :: Scale
 spanish_gypsy
     = (
-          "Spanish Gypsy", 
+          "spanish-gypsy", 
           [Half, AugSec, Half, Whole, Half, Whole, Whole]
       )
 
 blues :: Scale
 blues
     = (
-          "Blues", 
+          "blues", 
           [AugSec, Whole, Half, Half, AugSec, Whole]
       )
 
 super_locrian :: Scale
 super_locrian
     = (
-          "Super Locrian", 
+          "super-locrian", 
           [Half, Whole, Half, Whole, Whole, Whole, Whole]
       )
 
@@ -119,14 +121,14 @@ super_locrian
 neopolitan_major :: Scale
 neopolitan_major
     = (
-          "Neopolitan Major",
+          "neopolitan-major",
           [Half, Whole, Whole, Whole, Whole, Whole, Half]  
       )
 
 neopolitan_minor :: Scale
 neopolitan_minor
     = (
-          "Neopolitan Minor",
+          "neopolitan-minor",
           [Half, Whole, Whole, Whole, Half, Whole, Whole]
       )
 
@@ -136,34 +138,35 @@ neopolitan_minor
 enigmatic :: Scale
 enigmatic
     = (
-          "Enigmatic", 
+          "enigmatic", 
           [Half, AugSec, Whole, Whole, Whole, Half, Half]
       )
 
 pentatonic_neutral :: Scale
 pentatonic_neutral
     = (
-          "Pentatonic Neutral",
+          "pentatonic-neutral",
           [Whole, AugSec, Whole, AugSec]  
       )
 
 pentatonic_major :: Scale
 pentatonic_major
     = (
-          "Pentatonic Major",
+          "pentatonic-major",
           [Whole, AugSec ,Whole, Whole, AugSec]
       )
+
 
 pentatonic_minor :: Scale
 pentatonic_minor
     = (
-          "Pentatonic Minor",
+          "pentatonic-minor",
           [AugSec, Whole, Whole, AugSec, Whole]  
       )
 
 pentatonic_blues :: Scale
 pentatonic_blues
     = (
-          "Pentatonic Blues",
+          "pentatonic-blues",
           [AugSec, Whole, Half, Half, AugSec]  
       )

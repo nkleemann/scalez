@@ -12,9 +12,11 @@ str_to_note s
         (note_str, "#") -> readMaybe $ note_str ++ "Sharp" :: Maybe Note
         _               -> Nothing
 
+str_to_scale :: String -> Maybe Scale
+str_to_scale s
+    = undefined
 
--- TODO IO [Note] or [Note] ?? 
--- This function has to be 
+
 scale_helper :: Maybe Note -> Maybe Scale -> Maybe [Note]
 scale_helper n s
     = case n of
