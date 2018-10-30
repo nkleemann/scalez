@@ -19,13 +19,13 @@ parse args =
         [r, s]            -> putStrLn "Normal Mode" -- return $ gen_scale r s >> exit 
         [r, s, "--sing"]  -> putStrLn "Sing a Song"
         ["-v"]            -> version   >> exit
-        [_]               -> complain  >> exit
+        [_]               -> complain  >> usage >> exit
         []                -> usage     >> exit
         _                 -> exit_oh_no
 
 
 usage       = putStrLn "scalez v 1.0\nUsage: scalez <rootnote> <scale> [--sing]"
-complain    = putStrLn "Faulty arguments.\nExample Invocation: scalez F# blues --sing"
+complain    = putStrLn "Errror: Faulty arguments.\n"
 version     = putStrLn "Haskell Scalez 1.0"
 exit        = exitWith ExitSuccess
 exit_oh_no  = exitWith $ ExitFailure 1
