@@ -9,6 +9,7 @@ data Step
   deriving (Show, Eq)
 
 type ScaleName = String
+type Scale     = (ScaleName, [Step])
 type ScaleMap  = M.Map ScaleName [Step]
 
 scalez :: ScaleMap

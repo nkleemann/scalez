@@ -22,32 +22,32 @@ type SemiTone = Int
 
 
 -- | Perform a half step.
-half_step :: SemiTone -> SemiTone
-half_step = (+ 1)
+halfStep :: SemiTone -> SemiTone
+halfStep = (+ 1)
 
 -- | Perform a whole step.
-whole_step :: SemiTone -> SemiTone
-whole_step = (+ 2)
+wholeStep :: SemiTone -> SemiTone
+wholeStep = (+ 2)
 
 -- | Perform both half and whole step to form an 'augmented second'.
-aug_sec :: SemiTone -> SemiTone
-aug_sec = (+ 3)
+augSec :: SemiTone -> SemiTone
+augSec = (+ 3)
 
 -- | Keep a tone in the same octave.
-same_octave :: SemiTone -> SemiTone
-same_octave = flip mod 12
+sameOctave :: SemiTone -> SemiTone
+sameOctave = flip mod 12
 
 -- | Transpose a note by a given step.
 transpose :: Note -> Step -> Note
 transpose note step
     = case step of
-            Half   -> to_note . same_octave . half_step  $ to_tone note
-            Whole  -> to_note . same_octave . whole_step $ to_tone note
-            AugSec -> to_note . same_octave . aug_sec    $ to_tone note
+            Half   -> toNote . sameOctave . halfStep  $ toTone note
+            Whole  -> toNote . sameOctave . wholeStep $ toTone note
+            AugSec -> toNote . sameOctave . augSec    $ toTone note
 
 -- | Generate a concrete scale beginning at root note.
-gen_scale :: Note -> [Step] -> [Note] 
-gen_scale = scanl transpose
+genScale :: Note -> [Step] -> [Note] 
+genScale = scanl transpose
 
 
 --
@@ -55,9 +55,9 @@ gen_scale = scanl transpose
 --
 
 -- | Used for transposition
-to_tone :: Note -> SemiTone
-to_tone = fromEnum
+toTone :: Note -> SemiTone
+toTone = fromEnum
 
 -- | Transform SemiTone back into classical notation as 'Note'
-to_note :: SemiTone -> Note
-to_note = toEnum
+toNote :: SemiTone -> Note
+toNote = toEnum
