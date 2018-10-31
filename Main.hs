@@ -1,7 +1,6 @@
 module Main where
 
 import System.Environment (getArgs)
-import System.Exit (exitWith, ExitCode(..))
 import Util
 import Note
 import Scale
@@ -19,10 +18,11 @@ parse args sz
     = case args of
         [r, s]            -> return (strToNote r, strToScale s sz, Quiet)
         [r, s, "--sing"]  -> return (strToNote r, strToScale s sz, Loud) 
-        ["-v"]            -> version >> exit
-        [_]               -> badArgs >> exit
-        []                -> usage   >> exit
-        _                 -> usage   >> exitOhNo
+        ["-v"]            -> version       >> exit
+        ["--list"]        -> listScalez sz >> exit
+        [_]               -> badArgs       >> exit
+        []                -> usage         >> exit
+        _                 -> usage         >> exitOhNo
 
 handleArgs :: (Maybe Note, Maybe Scale, Verbosity) -> IO ()
 handleArgs args
@@ -37,15 +37,7 @@ handleArgs args
 
 
 
-usage, complain, badArgs, version :: IO ()
-usage       = putStrLn "scalez v 1.0\nUsage: scalez <rootnote> <scale> [--sing]"
-complain    = putStrLn "Errror: Faulty arguments.\n"
-badArgs     = usage >> complain
-version     = putStrLn "Haskell Scalez 1.0"
 
-exit, exitOhNo :: IO a
-exit      = exitWith ExitSuccess
-exitOhNo  = exitWith $ ExitFailure 1
 
 
 {-  Example : https://wiki.haskell.org/Tutorials/Programming_Haskell/Argument_handling

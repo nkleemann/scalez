@@ -2,6 +2,7 @@ module Util where
 
 import Text.Read (readMaybe)
 import Data.Char (toLower, toUpper)
+import System.Exit (exitWith, ExitCode(..))
 import Note
 import Scale
 import Audio
@@ -38,7 +39,18 @@ showScalePattern :: ScalePattern -> IO ()
 showScalePattern p
     = print p
 
+usage, complain, badArgs, version :: IO ()
+usage         = putStrLn "scalez\nUsage: scalez <rootnote> <scale> [--sing].\nList scales: scalez --list"
+complain      = putStrLn "Errror: Faulty arguments.\n"
+badArgs       = usage >> complain
+version       = putStrLn "Haskell Scalez 1.0"
 
+listScalez :: ScaleMap -> IO ()
+listScalez sz = mapM_ putStrLn $ M.keys sz
+
+exit, exitOhNo :: IO a
+exit      = exitWith ExitSuccess
+exitOhNo  = exitWith $ ExitFailure 1
 
 
 
