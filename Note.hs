@@ -18,7 +18,8 @@ data Note
     | B 
     deriving (Show, Read, Enum, Eq)
 
-type SemiTone = Int
+type SemiTone     = Int
+type ScalePattern = [Note]
 
 
 -- | Perform a half step.
@@ -46,8 +47,8 @@ transpose note step
             AugSec -> toNote . sameOctave . augSec    $ toTone note
 
 -- | Generate a concrete scale beginning at root note.
-genScale :: Note -> [Step] -> [Note] 
-genScale = scanl transpose
+genScalePattern :: Note -> Scale -> ScalePattern
+genScalePattern = scanl transpose
 
 
 --

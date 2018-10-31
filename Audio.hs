@@ -11,6 +11,11 @@ data Sound
     | Stop
     deriving (Show, Eq)
 
+data Verbosity
+    = Loud
+    | Quiet
+    deriving (Show, Eq)
+
 type Frequency = Float
 type Pattern   = [Sound]
 
