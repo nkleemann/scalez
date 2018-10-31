@@ -48,7 +48,7 @@ halfStepFq freq step =
         AugSec -> freq * (tvelvetoneBase ^ (3 :: Int))
 
 -- | Generate a sequence of Frequencies.
-freqsFromRoot :: Frequency -> [Step] -> [Frequency]
+freqsFromRoot :: Frequency -> Scale -> [Frequency]
 freqsFromRoot = scanl halfStepFq
 
 -- | Play back a musical pattern.

@@ -11,27 +11,36 @@ import Audio
 main :: IO ()
 main = do
     args   <- getArgs
-    result <- parse args scalez
-    print result
-    return ()
+    parse args scalez >>= handleArgs 
 
 
 parse :: [String] -> ScaleMap -> IO (Maybe Note, Maybe Scale, Verbosity)
-parse args sz =
-    case args of
-        [r, s]            -> return (strToNote r, strToSteps s sz, Quiet) 
-        [r, s, "--sing"]  -> return (strToNote r, strToSteps s sz, Loud) 
-        ["-v"]            -> version   >> exit
-        [_]               -> complain  >> usage >> exit
-        []                -> usage     >> exit
-        _                 -> usage     >> exitOhNo
+parse args sz 
+    = case args of
+        [r, s]            -> return (strToNote r, strToScale s sz, Quiet)
+        [r, s, "--sing"]  -> return (strToNote r, strToScale s sz, Loud) 
+        ["-v"]            -> version >> exit
+        [_]               -> badArgs >> exit
+        []                -> usage   >> exit
+        _                 -> usage   >> exitOhNo
+
+handleArgs :: (Maybe Note, Maybe Scale, Verbosity) -> IO ()
+handleArgs args
+    = case args of
+        (Just n, Just s, Quiet)     -> mapM_ (putStr . noteToStr) (genScalePattern n s) >> putStrLn ""
+        (Just n, Just s, Loud)      -> sing $ toPattern $ freqsFromRoot (toFreq n) s
+
+        -- redundany? handle in parse?
+        (Nothing, _, _)             -> usage >> return ()
+        (_, Nothing, _)             -> usage >> return ()
 
 
 
 
-usage, complain, version :: IO ()
+usage, complain, badArgs, version :: IO ()
 usage       = putStrLn "scalez v 1.0\nUsage: scalez <rootnote> <scale> [--sing]"
 complain    = putStrLn "Errror: Faulty arguments.\n"
+badArgs     = usage >> complain
 version     = putStrLn "Haskell Scalez 1.0"
 
 exit, exitOhNo :: IO a
