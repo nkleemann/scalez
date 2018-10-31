@@ -14,21 +14,21 @@ main = do
 
 
 parse :: [String] -> ScaleMap -> IO (Maybe Note, Maybe Scale, Verbosity)
-parse args sz 
-    = case args of
+parse args sz =
+    case args of
         [r, s]            -> return (strToNote r, strToScale s sz, Quiet)
         [r, s, "--sing"]  -> return (strToNote r, strToScale s sz, Loud) 
-        ["-v"]            -> version       >> exit
         ["--list"]        -> listScalez sz >> exit
+        ["-v"]            -> version       >> exit
         [_]               -> badArgs       >> exit
         []                -> usage         >> exit
         _                 -> usage         >> exitOhNo
 
 handleArgs :: (Maybe Note, Maybe Scale, Verbosity) -> IO ()
-handleArgs args
-    = case args of
-        (Just n, Just s, Quiet)     -> mapM_ (putStr . noteToStr) (genScalePattern n s) >> putStrLn ""
-        (Just n, Just s, Loud)      -> sing $ toPattern $ freqsFromRoot (toFreq n) s
+handleArgs args = 
+    case args of
+        (Just n, Just s, Quiet) -> mapM_ (putStr . noteToStr) (genScalePattern n s) >> putStrLn ""
+        (Just n, Just s, Loud)  -> sing $ toPattern $ freqsFromRoot (toFreq n) s
 
         -- redundany? handle in parse?
         (Nothing, _, _)             -> usage >> return ()
