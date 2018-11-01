@@ -1,6 +1,7 @@
 module Note where
 
-import Scale
+    
+import Scale (Scale, Step (..))
 
 
 data Note

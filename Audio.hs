@@ -1,10 +1,11 @@
 module Audio where
 
 import Control.Concurrent (threadDelay)
-import Control.Monad (forM_)
-import System.Process (runCommand)
-import Note
-import Scale
+import Control.Monad      (forM_)
+import Note               (Note (..), toTone)
+import Scale              (Scale, Step (..))
+import System.Process     (runCommand)
+
 
 data Sound
     = S Frequency
