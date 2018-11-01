@@ -3,9 +3,8 @@ module Util where
 import Text.Read (readMaybe)
 import Data.Char (toLower, toUpper)
 import System.Exit (exitWith, ExitCode(..))
-import Note
-import Scale
-import Audio
+import Note (Note (..))
+import Scale (Scale, scalez)
 import qualified Data.Map as M
 
 --
@@ -32,17 +31,17 @@ noteToStr n =
         _      -> show n ++ " "
 
 -- | Search the local scale-DB for a Scale.
-strToScale :: String -> ScaleMap -> Maybe Scale
-strToScale s = M.lookup $ map toLower s
+strToScale :: String -> Maybe Scale
+strToScale s = M.lookup (map toLower s) scalez
 
-usage, complain, badArgs, version :: IO ()
-usage         = putStrLn "scalez\nUsage: scalez <rootnote> <scale> [--sing].\nList scales: scalez --list"
-complain      = putStrLn "Errror: Faulty arguments.\n"
+usage, complain, badArgs :: IO ()
+usage         = putStrLn "scalez v 1.0\nUsage: scalez <rootnote> <scale> [--sing].\
+                          \nList scales: scalez --list\n"
+complain      = putStrLn "Error: Faulty arguments.\n"
 badArgs       = usage >> complain
-version       = putStrLn "Haskell Scalez 1.0"
 
-listScalez :: ScaleMap -> IO ()
-listScalez sz = mapM_ putStrLn $ M.keys sz
+listScalez :: IO ()
+listScalez = mapM_ putStrLn $ M.keys scalez
 
 exit, exitOhNo :: IO a
 exit      = exitWith ExitSuccess
@@ -56,21 +55,3 @@ exitOhNo  = exitWith $ ExitFailure 1
 
 
 
-
-
-genScalePatternH :: Maybe Note -> Maybe Scale -> Maybe ScalePattern
-genScalePatternH n s =
-    case n of
-        Nothing -> Nothing
-        Just n' -> case s of
-                       Nothing -> Nothing
-                       Just s' -> Just $ genScalePattern n' s'
-
-
-singH :: Maybe Note -> Maybe Scale -> IO ()
-singH n s
-    = case n of
-        Nothing -> return ()
-        Just n' -> case s of
-                       Nothing -> return ()
-                       Just s' -> sing $ toPattern $ freqsFromRoot (toFreq n') s'

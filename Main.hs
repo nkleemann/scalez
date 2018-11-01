@@ -6,33 +6,40 @@ import Note
 import Scale
 import Audio
 
+data Flag
+  = Sing
+  | PrintNotes
+  | ListScales
+  | ShowUsage
+  | BadArgs
+  deriving (Eq)
+
 
 main :: IO ()
 main = do
-    args   <- getArgs
-    parse args scalez >>= handleArgs 
+    args <- getArgs
+    parse args >>= handleArgs
 
 
-parse :: [String] -> ScaleMap -> IO (Maybe Note, Maybe Scale, Verbosity)
-parse args sz =
+parse :: [String] -> IO (Maybe Note, Maybe Scale, Flag)
+parse args =
     case args of
-        [r, s]            -> return (strToNote r, strToScale s sz, Quiet)
-        [r, s, "--sing"]  -> return (strToNote r, strToScale s sz, Loud) 
-        ["--list"]        -> listScalez sz >> exit
-        ["-v"]            -> version       >> exit
-        [_]               -> badArgs       >> exit
-        []                -> usage         >> exit
-        _                 -> usage         >> exitOhNo
+        [r, s]            -> return (strToNote r, strToScale s, PrintNotes)
+        [r, s, "--sing"]  -> return (strToNote r, strToScale s, Sing) 
+        ["--list"]        -> return (Nothing, Nothing, ListScales)
+        []                -> return (Nothing, Nothing, ShowUsage)
+        _                 -> return (Nothing, Nothing, BadArgs)
 
-handleArgs :: (Maybe Note, Maybe Scale, Verbosity) -> IO ()
+handleArgs :: (Maybe Note, Maybe Scale, Flag) -> IO ()
 handleArgs args = 
     case args of
-        (Just n, Just s, Quiet) -> mapM_ (putStr . noteToStr) (genScalePattern n s) >> putStrLn ""
-        (Just n, Just s, Loud)  -> sing $ toPattern $ freqsFromRoot (toFreq n) s
+        (Just n, Just s, PrintNotes) -> mapM_ (putStr . noteToStr) (genScalePattern n s) >> putStrLn ""
+        (Just n, Just s, Sing)       -> sing $ toPattern $ freqsFromRoot (toFreq n) s
+        (_, _, ListScales)           -> listScalez >> exit
+        (_, _, ShowUsage)            -> usage >> exit
+        (_, _, BadArgs)              -> badArgs >> exit
+        _                            -> badArgs >> exitOhNo
 
-        -- redundany? handle in parse?
-        (Nothing, _, _)             -> usage >> return ()
-        (_, Nothing, _)             -> usage >> return ()
 
 
 
