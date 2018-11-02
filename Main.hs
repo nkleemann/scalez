@@ -17,9 +17,8 @@ data Flag
 
 
 main :: IO ()
-main = do
-    args <- getArgs
-    parse args >>= handleArgs
+main = 
+    getArgs >>= parse >>= handleArgs
 
 
 parse :: [String] -> IO (Maybe Note, Maybe Scale, Flag)
