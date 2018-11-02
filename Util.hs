@@ -38,7 +38,7 @@ strToScale s = M.lookup (map toLower s) scalez
 
 -- | CLI infos for user.
 usage, complain, badArgs :: IO ()
-usage         = putStrLn "scalez v 1.0\nUsage: scalez <rootnote> <scale> [--sing].\nList scales: scalez --list\n"
+usage         = putStrLn "scalez v 0.1\nUsage: scalez <rootnote> <scale> [--sing].\nList scales: scalez --list\n"
 complain      = putStrLn "Error: Faulty arguments.\n"
 badArgs       = usage >> complain
 
