@@ -4,7 +4,7 @@ import Control.Concurrent (threadDelay)
 import Control.Monad      (forM_)
 import Note               (Note (..), toTone)
 import Scale              (Scale, Step (..))
-import System.Process     (runCommand)
+import System.Process     (runCommand, callCommand)
 
 
 data Sound
@@ -50,18 +50,18 @@ freqsFromRoot = scanl halfStepFq
 
 -- | Play back a musical pattern.
 sing :: Pattern -> IO ()
-sing pattern' =
+sing pattern' = 
     forM_ pattern'
         (\s ->
             if s == Stop
                 then return ()
-                else playSound s >> threadDelay 300000)
+                else playSound s >> threadDelay 30000)
+
 
 -- | Play back a sound using sox.
 playSound :: Sound -> IO ()
 playSound s =
-    runCommand ("play -n -c1 synth 0.3 sine " ++ asString s ++ " &> /dev/null") >>
-    return ()
+    callCommand ("play -n -c1 synth 0.3 sine " ++ asString s ++ " &> /dev/null")
 
 -- | Transform Frequency sequence into a musical Pattern which we can play back.
 toPattern :: [Frequency] -> Pattern

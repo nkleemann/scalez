@@ -1,11 +1,10 @@
 module Main where
 
 import Util
-import System.Environment (getArgs)
 import Audio              (freqsFromRoot, sing, toFreq, toPattern)
 import Note               (Note, genScalePattern)
 import Scale              (Scale)
-    
+import System.Environment (getArgs)
 
 data Flag
   = Sing
