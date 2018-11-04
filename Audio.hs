@@ -4,6 +4,7 @@ import Control.Concurrent (threadDelay)
 import Control.Monad      (forM_)
 import Note               (Note (..), toTone)
 import Scale              (Scale, Step (..))
+import Util               (exitOhNo)
 import System.Process     (callCommand)
 import System.Info        (os)
 
@@ -16,6 +17,8 @@ data Sound
 
 type Frequency = Float
 type Pattern   = [Sound]
+
+
 
 -- Change to 432.0 if you wish :p
 a4BaseFreq :: Frequency
@@ -49,28 +52,33 @@ halfStepFq freq step =
 freqsFromRoot :: Frequency -> Scale -> [Frequency]
 freqsFromRoot = scanl halfStepFq
 
--- | Play back a musical pattern.
-sing :: Pattern -> IO ()
-sing pattern' = 
+-- | Build and play back a musical pattern from a root note and a scale.
+sing :: Note -> Scale -> IO ()
+sing n s = 
+    singH playF (toPattern $ freqsFromRoot (toFreq n) s)
+    where playF = case os of
+            "darwin" -> playSoundDarwin
+            _        -> playSoundLinux
+
+-- | Play back a musical pattern while the playback function depends
+-- | the host OS.
+singH :: (Sound -> IO ()) -> Pattern -> IO ()
+singH playF pattern' = 
     forM_ pattern'
         (\s ->
             if s == Stop
                 then return ()
-                else playSound s >> threadDelay 30000)
+                else playF s >> threadDelay 3000)
 
 
--- Mac: 3000
--- -t alsa und -q weg!
--- oder liegt's an der ghc version? (8.2.2)
+-- | Play back a sound using sox. threadDelay blocks the current thread in on darwin.
+playSoundDarwin :: Sound -> IO ()
+playSoundDarwin s = callCommand ("play -q -n -c1 synth 0.2 sine " ++ asString s ++ " &> /dev/null")
 
+-- | Play back a sound using sox. threadDelay does not work as expected on linux.
+playSoundLinux :: Sound -> IO ()
+playSoundLinux s = callCommand ("play -q -n -t alsa -c1 synth 0.2 sine " ++ asString s ++ " &> /dev/null && sleep 0.2")
 
--- | Play back a sound using sox.
-playSound :: Sound -> IO ()
-playSound s =
-    case os of
-        "linux"  -> callCommand ("play -q -n -t alsa -c1 synth 0.2 sine " ++ asString s ++ " &> /dev/null && sleep 0.2")
-        "darwin" -> callCommand ("play -q -n -c1 synth 0.3 sine " ++ asString s ++ " &> /dev/null && sleep 0.1")
-        _        -> error "Huh"
 
 -- | Transform Frequency sequence into a musical Pattern which we can play back.
 toPattern :: [Frequency] -> Pattern

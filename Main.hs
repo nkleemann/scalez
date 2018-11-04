@@ -1,8 +1,8 @@
 module Main where
 
 import Util
-import Audio              (freqsFromRoot, sing, toFreq, toPattern)
-import Note               (Note, genScalePattern)
+import Audio              (sing)
+import Note               (Note, presentScalePattern)
 import Scale              (Scale)
 import System.Environment (getArgs)
 
@@ -32,8 +32,8 @@ parse args =
 handleArgs :: (Maybe Note, Maybe Scale, Flag) -> IO ()
 handleArgs args = 
     case args of
-        (Just n, Just s, PrintNotes) -> mapM_ (putStr . noteToStr) (genScalePattern n s) >> putStrLn ""
-        (Just n, Just s, Sing)       -> sing $ toPattern $ freqsFromRoot (toFreq n) s
+        (Just n, Just s, PrintNotes) -> presentScalePattern n s
+        (Just n, Just s, Sing)       -> sing n s
         (_, _, ListScales)           -> listScalez >> exit
         (_, _, ShowUsage)            -> usage      >> exit
         (_, _, BadArgs)              -> badArgs    >> exit

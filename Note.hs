@@ -51,6 +51,11 @@ transpose note step
 genScalePattern :: Note -> Scale -> ScalePattern
 genScalePattern = scanl transpose
 
+-- | Generate and print a scale pattern from a root note to the screen.
+presentScalePattern :: Note -> Scale -> IO ()
+presentScalePattern n s =
+    mapM_ (putStr . noteToStr) (genScalePattern n s) >> putStrLn ""
+
 
 --
 --      UTILS
@@ -63,3 +68,14 @@ toTone = fromEnum
 -- | Transform SemiTone back into classical notation as 'Note'
 toNote :: SemiTone -> Note
 toNote = toEnum
+
+-- | Print a Note to the screen.
+noteToStr :: Note -> String
+noteToStr n =
+    case n of
+        CSharp -> "C# "
+        DSharp -> "D# "
+        FSharp -> "F# "
+        GSharp -> "G# "
+        ASharp -> "A# "
+        _      -> show n ++ " "

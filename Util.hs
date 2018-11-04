@@ -21,16 +21,6 @@ strToNote s =
         (noteStr, "#") -> readMaybe $ map toUpper noteStr ++ "Sharp" :: Maybe Note
         _              -> Nothing
 
--- | Print a Note to the screen.
-noteToStr :: Note -> String
-noteToStr n =
-    case n of
-        CSharp -> "C# "
-        DSharp -> "D# "
-        FSharp -> "F# "
-        GSharp -> "G# "
-        ASharp -> "A# "
-        _      -> show n ++ " "
 
 -- | Search the local scale-DB for a Scale.
 strToScale :: String -> Maybe Scale
