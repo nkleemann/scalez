@@ -5,6 +5,7 @@ import Control.Monad      (forM_)
 import Note               (Note (..), toTone)
 import Scale              (Scale, Step (..))
 import System.Process     (callCommand)
+import System.Info        (os)
 
 
 data Sound
@@ -66,7 +67,10 @@ sing pattern' =
 -- | Play back a sound using sox.
 playSound :: Sound -> IO ()
 playSound s =
-    callCommand ("play -q -n -t alsa -c1 synth 0.3 sine " ++ asString s ++ " &> /dev/null")
+    case os of
+        "linux"  -> callCommand ("play -q -n -t alsa -c1 synth 0.2 sine " ++ asString s ++ " &> /dev/null && sleep 0.2")
+        "darwin" -> callCommand ("play -q -n -c1 synth 0.3 sine " ++ asString s ++ " &> /dev/null && sleep 0.1")
+        _        -> error "Huh"
 
 -- | Transform Frequency sequence into a musical Pattern which we can play back.
 toPattern :: [Frequency] -> Pattern
