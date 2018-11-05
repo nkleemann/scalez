@@ -1,8 +1,6 @@
 module Note where
 
-    
 import Scale (Scale, Step (..))
-
 
 data Note
     = C 

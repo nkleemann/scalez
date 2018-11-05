@@ -1,6 +1,5 @@
 module Util where
 
-
 import           Data.Char   (toLower, toUpper)
 import           Note        (Note (..))
 import           Scale       (Scale, scalez)

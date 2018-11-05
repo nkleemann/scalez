@@ -1,8 +1,6 @@
 module Scale where
 
-
 import qualified Data.Map as M
-
 
 data Step
   = Whole

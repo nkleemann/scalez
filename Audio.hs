@@ -1,6 +1,5 @@
 module Audio where
 
-
 import Control.Concurrent (threadDelay)
 import Control.Monad      (forM_)
 import Note               (Note (..), toTone)
@@ -8,12 +7,10 @@ import Scale              (Scale, Step (..))
 import System.Process     (callCommand)
 import System.Info        (os)
 
-
 data Sound
     = S Frequency
     | Stop
     deriving (Show, Eq)
-
 
 type Frequency = Float
 type Pattern   = [Sound]
