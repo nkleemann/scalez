@@ -18,7 +18,6 @@ type Frequency = Float
 type Pattern   = [Sound]
 
 
-
 -- Change to 432.0 if you wish :p
 a4BaseFreq :: Frequency
 a4BaseFreq     = 440.0 
@@ -42,10 +41,11 @@ halfSteps note = toTone note - toTone A
 -- | Raise a frequency by one half step.
 halfStepFq :: Frequency -> Step -> Frequency
 halfStepFq freq step =
-    case step of
-        Half   -> freq *  tvelvetoneBase
-        Whole  -> freq * (tvelvetoneBase ^ (2 :: Int))
-        AugSec -> freq * (tvelvetoneBase ^ (3 :: Int))
+    let raiseBy n = freq * (tvelvetoneBase ^ (n :: Int))
+    in case step of
+        Half   -> raiseBy 1
+        Whole  -> raiseBy 2
+        AugSec -> raiseBy 3
 
 -- | Generate a sequence of Frequencies.
 freqsFromRoot :: Frequency -> Scale -> [Frequency]
@@ -60,7 +60,7 @@ sing n s =
             _        -> playSoundLinux -- TODO windows?
 
 -- | Play back a musical pattern while the playback function depends
--- | the host OS.
+-- | on the host OS.
 singH :: (Sound -> IO ()) -> Pattern -> IO ()
 singH playF pattern' = 
     forM_ pattern'
@@ -69,7 +69,6 @@ singH playF pattern' =
                 then return ()
                 else playF s >> threadDelay 3000)
 
-
 -- | Play back a sound using sox. threadDelay blocks the current thread in on darwin.
 playSoundDarwin :: Sound -> IO ()
 playSoundDarwin s = callCommand ("play -q -n -c1 synth 0.2 sine " ++ asString s ++ " &> /dev/null")
@@ -77,7 +76,6 @@ playSoundDarwin s = callCommand ("play -q -n -c1 synth 0.2 sine " ++ asString s 
 -- | Play back a sound using sox. threadDelay does not work as expected on linux.
 playSoundLinux :: Sound -> IO ()
 playSoundLinux s = callCommand ("play -q -n -t alsa -c1 synth 0.2 sine " ++ asString s ++ " &> /dev/null && sleep 0.2")
-
 
 -- | Transform Frequency sequence into a musical Pattern which we can play back.
 toPattern :: [Frequency] -> Pattern
