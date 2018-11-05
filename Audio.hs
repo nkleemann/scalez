@@ -52,7 +52,7 @@ toPattern freqs =
 freqsFromRoot :: Frequency -> Scale -> [Frequency]
 freqsFromRoot = scanl halfStepFq
 
--- | Raise a frequency by one half step.
+-- | Raise a frequency by a sequence of half steps.
 halfStepFq :: Frequency -> Step -> Frequency
 halfStepFq freq step =
     let raiseBy n = freq * (tvelvetoneBase ^ (n :: Int))
@@ -75,7 +75,7 @@ toFreq note = a4BaseFreq * (tvelvetoneBase ^^ (halfSteps note))
 halfSteps :: Note -> Int
 halfSteps note = toTone note - toTone A
 
--- | Play back a sound using sox. threadDelay blocks the current thread in on darwin.
+-- | Play back a sound using sox. threadDelay blocks the current thread on darwin.
 playSoundDarwin :: Sound -> IO ()
 playSoundDarwin s = 
     callCommand ("play -q -n -c1 synth 0.2 sine " ++ asString s ++ " &> /dev/null")
@@ -85,7 +85,7 @@ playSoundLinux :: Sound -> IO ()
 playSoundLinux s = 
     callCommand ("play -q -n -t alsa -c1 synth 0.2 sine " ++ asString s ++ " &> /dev/null && sleep 0.2")
 
-    -- | "" will never cause problems, ever.
+-- | "" will never cause problems, ever.
 asString :: Sound -> String
 asString s =
     case s of
