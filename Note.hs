@@ -19,9 +19,27 @@ data Note
     | B 
     deriving (Show, Read, Enum, Eq)
 
+
 type SemiTone     = Int
 type ScalePattern = [Note]
 
+
+-- | Generate and print a scale pattern to the screen.
+presentScalePattern :: Note -> Scale -> IO ()
+presentScalePattern n s =
+    mapM_ (putStr . noteToStr) (genScalePattern n s) >> putStrLn ""
+
+-- | Generate a concrete scale beginning at root note.
+genScalePattern :: Note -> Scale -> ScalePattern
+genScalePattern = scanl transpose
+
+-- | Transpose a note by a given step.
+transpose :: Note -> Step -> Note
+transpose note step
+    = case step of
+            Half   -> toNote . sameOctave . halfStep  $ toTone note
+            Whole  -> toNote . sameOctave . wholeStep $ toTone note
+            AugSec -> toNote . sameOctave . augSec    $ toTone note
 
 -- | Perform a half step.
 halfStep :: SemiTone -> SemiTone
@@ -38,28 +56,6 @@ augSec = (+ 3)
 -- | Keep a tone in the same octave.
 sameOctave :: SemiTone -> SemiTone
 sameOctave = flip mod 12
-
--- | Transpose a note by a given step.
-transpose :: Note -> Step -> Note
-transpose note step
-    = case step of
-            Half   -> toNote . sameOctave . halfStep  $ toTone note
-            Whole  -> toNote . sameOctave . wholeStep $ toTone note
-            AugSec -> toNote . sameOctave . augSec    $ toTone note
-
--- | Generate a concrete scale beginning at root note.
-genScalePattern :: Note -> Scale -> ScalePattern
-genScalePattern = scanl transpose
-
--- | Generate and print a scale pattern from a root note to the screen.
-presentScalePattern :: Note -> Scale -> IO ()
-presentScalePattern n s =
-    mapM_ (putStr . noteToStr) (genScalePattern n s) >> putStrLn ""
-
-
---
---      UTILS
---
 
 -- | Used for transposition
 toTone :: Note -> SemiTone

@@ -19,10 +19,47 @@ type Pattern   = [Sound]
 
 
 -- Change to 432.0 if you wish :p
-a4BaseFreq :: Frequency
-a4BaseFreq     = 440.0 
-tvelvetoneBase :: Float
-tvelvetoneBase = 1.0594630943592953
+a4BaseFreq     = 440.0 :: Frequency
+tvelvetoneBase = 1.0594630943592953 :: Float
+
+
+-- | Build and play back a musical pattern from a root note and a scale.
+sing :: Note -> Scale -> IO ()
+sing n s = 
+    singH playF (toPattern $ freqsFromRoot (toFreq n) s)
+    where playF = case os of
+            "darwin" -> playSoundDarwin
+            _        -> playSoundLinux
+
+-- | Play back a musical pattern while the playback function depends
+-- | on the host OS.
+singH :: (Sound -> IO ()) -> Pattern -> IO ()
+singH playF pattern' = 
+    forM_ pattern'
+        (\s ->
+            if s == Stop
+                then return ()
+                else playF s >> threadDelay 3000)
+
+-- | Transform Frequency sequence into a musical Pattern which we can play back.
+toPattern :: [Frequency] -> Pattern
+toPattern freqs =
+    case freqs of
+        []     -> [Stop]
+        (f:fs) -> S f : toPattern fs
+
+-- | Generate a sequence of Frequencies.
+freqsFromRoot :: Frequency -> Scale -> [Frequency]
+freqsFromRoot = scanl halfStepFq
+
+-- | Raise a frequency by one half step.
+halfStepFq :: Frequency -> Step -> Frequency
+halfStepFq freq step =
+    let raiseBy n = freq * (tvelvetoneBase ^ (n :: Int))
+    in case step of
+        Half   -> raiseBy 1
+        Whole  -> raiseBy 2
+        AugSec -> raiseBy 3
 
 -- | Convert a Note into an audible frequency.
 -- |    
@@ -38,53 +75,17 @@ toFreq note = a4BaseFreq * (tvelvetoneBase ^^ (halfSteps note))
 halfSteps :: Note -> Int
 halfSteps note = toTone note - toTone A
 
--- | Raise a frequency by one half step.
-halfStepFq :: Frequency -> Step -> Frequency
-halfStepFq freq step =
-    let raiseBy n = freq * (tvelvetoneBase ^ (n :: Int))
-    in case step of
-        Half   -> raiseBy 1
-        Whole  -> raiseBy 2
-        AugSec -> raiseBy 3
-
--- | Generate a sequence of Frequencies.
-freqsFromRoot :: Frequency -> Scale -> [Frequency]
-freqsFromRoot = scanl halfStepFq
-
--- | Build and play back a musical pattern from a root note and a scale.
-sing :: Note -> Scale -> IO ()
-sing n s = 
-    singH playF (toPattern $ freqsFromRoot (toFreq n) s)
-    where playF = case os of
-            "darwin" -> playSoundDarwin
-            _        -> playSoundLinux -- TODO windows?
-
--- | Play back a musical pattern while the playback function depends
--- | on the host OS.
-singH :: (Sound -> IO ()) -> Pattern -> IO ()
-singH playF pattern' = 
-    forM_ pattern'
-        (\s ->
-            if s == Stop
-                then return ()
-                else playF s >> threadDelay 3000)
-
 -- | Play back a sound using sox. threadDelay blocks the current thread in on darwin.
 playSoundDarwin :: Sound -> IO ()
-playSoundDarwin s = callCommand ("play -q -n -c1 synth 0.2 sine " ++ asString s ++ " &> /dev/null")
+playSoundDarwin s = 
+    callCommand ("play -q -n -c1 synth 0.2 sine " ++ asString s ++ " &> /dev/null")
 
 -- | Play back a sound using sox. threadDelay does not work as expected on linux.
 playSoundLinux :: Sound -> IO ()
-playSoundLinux s = callCommand ("play -q -n -t alsa -c1 synth 0.2 sine " ++ asString s ++ " &> /dev/null && sleep 0.2")
+playSoundLinux s = 
+    callCommand ("play -q -n -t alsa -c1 synth 0.2 sine " ++ asString s ++ " &> /dev/null && sleep 0.2")
 
--- | Transform Frequency sequence into a musical Pattern which we can play back.
-toPattern :: [Frequency] -> Pattern
-toPattern freqs =
-    case freqs of
-        []     -> [Stop]
-        (f:fs) -> S f : toPattern fs
-
--- | "" will never cause problems, ever.
+    -- | "" will never cause problems, ever.
 asString :: Sound -> String
 asString s =
     case s of

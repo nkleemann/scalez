@@ -1,6 +1,8 @@
 module Scale where
 
+
 import qualified Data.Map as M
+
 
 data Step
   = Whole
@@ -8,9 +10,11 @@ data Step
   | AugSec
   deriving (Show, Eq)
 
+
 type ScaleName = String
 type Scale     = [Step]
 type ScaleMap  = M.Map ScaleName Scale
+
 
 scalez :: ScaleMap
 scalez = M.fromList
