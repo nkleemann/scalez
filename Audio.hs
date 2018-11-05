@@ -4,7 +4,6 @@ import Control.Concurrent (threadDelay)
 import Control.Monad      (forM_)
 import Note               (Note (..), toTone)
 import Scale              (Scale, Step (..))
-import Util               (exitOhNo)
 import System.Process     (callCommand)
 import System.Info        (os)
 
@@ -58,7 +57,7 @@ sing n s =
     singH playF (toPattern $ freqsFromRoot (toFreq n) s)
     where playF = case os of
             "darwin" -> playSoundDarwin
-            _        -> playSoundLinux
+            _        -> playSoundLinux -- TODO windows?
 
 -- | Play back a musical pattern while the playback function depends
 -- | the host OS.
