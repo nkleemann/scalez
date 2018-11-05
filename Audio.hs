@@ -1,5 +1,6 @@
 module Audio where
 
+
 import Control.Concurrent (threadDelay)
 import Control.Monad      (forM_)
 import Note               (Note (..), toTone)
@@ -35,11 +36,10 @@ sing n s =
 -- | on the host OS.
 singH :: (Sound -> IO ()) -> Pattern -> IO ()
 singH playF pattern' = 
-    forM_ pattern'
-        (\s ->
+    forM_ pattern' $ \s ->
             if s == Stop
                 then return ()
-                else playF s >> threadDelay 3000)
+                else playF s >> threadDelay 3000
 
 -- | Transform Frequency sequence into a musical Pattern which we can play back.
 toPattern :: [Frequency] -> Pattern
