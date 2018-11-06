@@ -1,4 +1,4 @@
-# scalez
+# scalez :notes:
 
 Stay in key and explore scales while staying in your comfy shell.
 

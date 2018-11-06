@@ -66,7 +66,7 @@ halfStepFq freq step =
 -- |    a       (2) ** (1/12) (twelvetone_base)
 -- |    n       Number of halfsteps away from reference note
 toFreq :: Note -> Frequency
-toFreq note = a4BaseFreq * (tvelvetoneBase ^^ (halfSteps note))
+toFreq note = a4BaseFreq * (tvelvetoneBase ^^ halfSteps note)
 
 -- | Distance to reference note in number of half steps.
 halfSteps :: Note -> Int
