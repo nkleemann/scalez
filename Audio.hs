@@ -16,8 +16,8 @@ type Frequency = Float
 type Pattern   = [Sound]
 
 
--- Change to 432.0 if you wish :p
-a4BaseFreq     = 440.0 :: Frequency
+-- | Change to 440.0 for fallback compability :p
+a4BaseFreq     = 432.0 :: Frequency
 tvelvetoneBase = 1.0594630943592953 :: Float
 
 
